@@ -14,6 +14,8 @@
     button.equal{grid-column:span 2;background:#0a84ff;color:#fff}
     button.zero{grid-column:span 2}
     button:active{transform:translateY(1px)}
+    .clipart{display:flex;justify-content:center;margin-top:18px}
+    .clipart svg{width:260px;height:auto;filter:drop-shadow(0 6px 12px rgba(2,6,23,.08));}
   </style>
 </head>
 <body>
@@ -44,6 +46,32 @@
       <button data-value=".">.</button>
       <button class="equal" data-action="equals">=</button>
     </div>
+  </div>
+
+  <div class="clipart" aria-hidden="false" title="MV-22 Osprey clip art">
+    <!-- stylized MV-22 Osprey clip art (SVG) -->
+    <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MV-22 Osprey clip art">
+      <!-- simplified stylized side-profile Osprey -->
+      <g fill="none" stroke="#334155" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
+        <path d="M60 150 q60 -40 140 -40 h200 q80 0 140 40" fill="#cbd5e1" stroke="#1f2937" stroke-width="6"/>
+        <rect x="190" y="90" width="160" height="36" rx="8" fill="#0f172a" opacity="0.12"/>
+        <rect x="170" y="116" width="220" height="18" rx="8" fill="#0f172a" opacity="0.08"/>
+        <path d="M300 90 l40 -48" stroke="#0f172a" stroke-width="12" />
+        <circle cx="90" cy="140" r="6" fill="#0f172a" />
+        <circle cx="550" cy="140" r="6" fill="#0f172a" />
+      </g>
+      <g stroke="#0f172a" stroke-width="8" fill="#94a3b8">
+        <!-- left rotor nacelle -->
+        <ellipse cx="120" cy="64" rx="68" ry="18" transform="rotate(-6 120 64)"/>
+        <rect x="60" y="56" width="120" height="16" rx="8" fill="#cbd5e1" opacity="0.9"/>
+        <!-- right rotor nacelle -->
+        <ellipse cx="520" cy="64" rx="68" ry="18" transform="rotate(6 520 64)"/>
+        <rect x="460" y="56" width="120" height="16" rx="8" fill="#cbd5e1" opacity="0.9"/>
+      </g>
+      <g stroke="#0f172a" stroke-width="6" fill="#e2e8f0">
+        <path d="M240 120 q40 -18 120 -18 q30 0 90 18" />
+      </g>
+    </svg>
   </div>
 
   <script>
