@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Built-in Calculator</title>
+  <style>
+    body{font-family:system-ui,Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f3f4f6}
+    .calc{background:#fff;padding:16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08);width:340px}
+    .display{background:#0b1220;color:#fff;padding:12px;border-radius:8px;font-size:28px;text-align:right;min-height:64px;overflow:hidden;word-wrap:break-word}
+    .buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+    button{padding:16px;font-size:18px;border:0;border-radius:8px;background:#e6e7e9;cursor:pointer}
+    button.op{background:#ff9f0a;color:#fff}
+    button.equal{grid-column:span 2;background:#0a84ff;color:#fff}
+    button.zero{grid-column:span 2}
+    button:active{transform:translateY(1px)}
+  </style>
+</head>
+<body>
+  <div class="calc" role="application" aria-label="Calculator">
+    <div id="display" class="display" aria-live="polite">0</div>
+    <div class="buttons">
+      <button data-action="clear">C</button>
+      <button data-action="back">⌫</button>
+      <button data-value="%">%</button>
+      <button data-value="/">÷</button>
+
+      <button data-value="7">7</button>
+      <button data-value="8">8</button>
+      <button data-value="9">9</button>
+      <button data-value="*">×</button>
+
+      <button data-value="4">4</button>
+      <button data-value="5">5</button>
+      <button data-value="6">6</button>
+      <button data-value="-">−</button>
+
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button data-value="+">+</button>
+
+      <button class="zero" data-value="0">0</button>
+      <button data-value=".">.</button>
+      <button class="equal" data-action="equals">=</button>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const display = document.getElementById('display');
+    let expr = '';
+
+    function updateDisplay(v){ display.textContent = v === '' || v == null ? '0' : v; }
+
+    function append(s){
+      if (expr === '0' && /[0-9.]/.test(s)) expr = s;
+      else expr += s;
+      updateDisplay(expr);
+    }
+
+    function sanitize(input){
+      // allow digits, operators, parentheses, decimal, percent and spaces
+      if (!/^[0-9+\-*/().% ]*$/.test(input)) throw new Error('Invalid characters');
+      return input.replace(/×/g,'*').replace(/÷/g,'/');
+    }
+
+    function evaluateExpression(input){
+      // convert percent to division by 100 (e.g. 50% -> 50/100)
+      input = input.replace(/%/g, '/100');
+      input = sanitize(input);
+      try{
+        // sanitized input only contains safe chars; evaluate with Function
+        const fn = new Function('return ' + input);
+        const result = fn();
+        if (!isFinite(result)) throw new Error('Math error');
+        return result;
+      }catch(e){ throw new Error('Invalid expression'); }
+    }
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-value');
+        const action = btn.getAttribute('data-action');
+        if (action === 'clear'){ expr = ''; updateDisplay('0'); return; }
+        if (action === 'back'){ expr = expr.slice(0,-1); updateDisplay(expr||'0'); return; }
+        if (action === 'equals'){
+          if (!expr) return;
+          try{
+            const res = evaluateExpression(expr);
+            expr = String(res);
+            updateDisplay(expr);
+          }catch(e){ updateDisplay('Error'); expr = ''; }
+          return;
+        }
+        append(val);
+      });
+    });
+
+    // keyboard support
+    document.addEventListener('keydown', (e) => {
+      if ((e.key >= '0' && e.key <= '9') || ['.','+','-','*','/','(',')','%'].includes(e.key)){
+        append(e.key); e.preventDefault();
+      } else if (e.key === 'Enter'){
+        document.querySelector('[data-action="equals"]').click(); e.preventDefault();
+      } else if (e.key === 'Backspace'){
+        document.querySelector('[data-action="back"]').click(); e.preventDefault();
+      } else if (e.key.toLowerCase() === 'c'){
+        document.querySelector('[data-action="clear"]').click(); e.preventDefault();
+      }
+    });
+
+  })();
+  </script>
+</body>
+</html>
